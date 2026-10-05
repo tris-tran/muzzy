@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Name &amp; address extraction · demo</title>
+	<style>
+:root {
+	--bg: #f3f1ec;
+	--panel: #ffffff;
+	--ink: #1e1e22;
+	--muted: #6d6c72;
+	--line: #e3dfd6;
+	--accent: #3d5afe;
+	--accent-ink: #ffffff;
+	--name: #f5b700;
+	--name-bg: rgba(245, 183, 0, 0.28);
+	--addr: #0f9d8a;
+	--addr-bg: rgba(15, 157, 138, 0.22);
+	--run: #3d7bfd;
+	--ok: #2f9e44;
+	--bad: #e03131;
+	--code-bg: #f6f5f1;
+	--mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+	--sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+	color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #131316;
+		--panel: #1b1b20;
+		--ink: #ececf1;
+		--muted: #9b9aa4;
+		--line: #2c2c34;
+		--accent: #6f86ff;
+		--name-bg: rgba(245, 183, 0, 0.3);
+		--addr-bg: rgba(32, 201, 178, 0.25);
+		--addr: #20c9b2;
+		--code-bg: #16161a;
+		color-scheme: dark;
+	}
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+	background: var(--bg);
+	color: var(--ink);
+	font: 14px/1.45 var(--sans);
+	-webkit-font-smoothing: antialiased;
+}
+button, select { font: inherit; color: inherit; }
+code { font-family: var(--mono); font-size: 0.92em; }
+.muted { color: var(--muted); }
+
+.btn {
+	border: 0;
+	border-radius: 999px;
+	padding: 0.55rem 1.2rem;
+	background: var(--accent);
+	color: var(--accent-ink);
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.btn:hover { filter: brightness(1.08); }
+body[data-phase='idle'] .btn { animation: glow 2s ease-in-out infinite; }
+@keyframes glow {
+	50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent); }
+}
+select {
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 0.3rem 0.4rem;
+}
+.badge-model {
+	font: 12px var(--mono);
+	padding: 0.15rem 0.5rem;
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	color: var(--muted);
+}
+
+.back {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	flex: none;
+	border-radius: 50%;
+	border: 1px solid var(--line);
+	color: var(--ink);
+	text-decoration: none;
+	font-size: 1.1rem;
+}
+.back:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+
+/* ---------- stats + chunk grid ---------- */
+.stats { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+.stat b { display: block; font: 600 1.05rem/1.2 var(--mono); }
+.stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+#grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.cell {
+	width: 22px;
+	height: 22px;
+	border-radius: 5px;
+	display: grid;
+	place-items: center;
+	font: 10px var(--mono);
+	background: var(--line);
+	color: var(--muted);
+	transition: background 0.2s;
+}
+.cell.running { background: var(--run); color: #fff; animation: pulse 0.9s ease-in-out infinite; }
+.cell.retry { background: var(--bad); color: #fff; }
+.cell.done { background: var(--ok); color: #fff; }
+@keyframes pulse { 50% { opacity: 0.55; } }
+
+/* ---------- document ---------- */
+.file-bar {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font: 12px var(--mono);
+	color: var(--muted);
+	padding: 0 0 0.75rem;
+}
+.file-bar::before { content: '📄'; }
+#doc { position: relative; }
+
+.page {
+	background: #fff;
+	color: #222;
+	max-width: 640px;
+	margin: 0 auto 1.5rem;
+	padding: 56px 60px 40px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+	font: 15px/1.6 var(--serif);
+	position: relative;
+}
+.page h1 { font-size: 1.7rem; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+.page h2 { font-size: 1.1rem; margin: 1.6rem 0 0.4rem; }
+.page .meta { font-style: italic; color: #666; margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 1rem; }
+.page .sign { margin-top: 2rem; }
+.page .folio { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+
+.md { font: 13.5px/1.65 var(--mono); }
+.blk {
+	position: relative;
+	padding: 0.5rem 0.75rem 0.5rem 3.2rem;
+	margin-bottom: 6px;
+	border-radius: 8px;
+	border: 1px dashed transparent;
+	transition: background 0.3s, border-color 0.3s;
+}
+body:not([data-phase='idle']):not([data-phase='converting']) .blk { border-color: var(--line); }
+.blk[data-state='running'] { border-color: var(--run) !important; background: color-mix(in srgb, var(--run) 7%, transparent); }
+.blk[data-state='retry'] { border-color: var(--bad) !important; }
+.blk[data-state='done'] { border-style: solid; }
+.cid { position: absolute; left: 0.6rem; top: 0.55rem; font-size: 11px; color: var(--muted); }
+.blk[data-state='running'] .cid { color: var(--run); }
+.mk { color: var(--muted); opacity: 0.7; }
+.md .h1 { font-weight: 700; font-size: 1.15em; }
+.md .h2 { font-weight: 700; }
+.pgbreak { color: var(--muted); padding: 0.2rem 3.2rem; opacity: 0.6; }
+
+mark.ent { background: none; color: inherit; border-radius: 3px; transition: background 0.4s, box-shadow 0.4s; }
+mark.ent.on.name { background: var(--name-bg); box-shadow: inset 0 -2px 0 var(--name); }
+mark.ent.on.addr { background: var(--addr-bg); box-shadow: inset 0 -2px 0 var(--addr); }
+mark.ent.pop { animation: pop 0.5s ease-out; }
+mark.ent.focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+@keyframes pop { from { background: color-mix(in srgb, var(--accent) 50%, transparent); } }
+
+#overlay {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: start center;
+	padding-top: 30vh;
+	background: color-mix(in srgb, var(--bg) 55%, transparent);
+	backdrop-filter: blur(2px);
+	z-index: 5;
+}
+#overlay > div {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	padding: 0.9rem 1.3rem;
+	font-weight: 600;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+.spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid var(--line);
+	border-top-color: var(--accent);
+	border-radius: 50%;
+	animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- panels ---------- */
+.panel-title {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin: 0 0 0.6rem;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--muted);
+}
+.empty { color: var(--muted); font-size: 13px; padding: 0.5rem 0; }
+#reqList:not(:empty) + .empty, .has-results .found-empty { display: none; }
+
+details.sys {
+	margin-bottom: 0.75rem;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background: var(--panel);
+}
+details.sys summary { cursor: pointer; padding: 0.5rem 0.75rem; font-size: 13px; }
+details.sys pre { margin: 0; padding: 0 0.75rem 0.75rem; white-space: pre-wrap; font: 12px/1.5 var(--mono); color: var(--muted); }
+
+.req {
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-left: 3px solid var(--line);
+	border-radius: 10px;
+	padding: 0.55rem 0.7rem;
+	margin-bottom: 0.5rem;
+	cursor: pointer;
+}
+.req.new { animation: slide 0.25s ease-out; }
+.req:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+@keyframes slide { from { opacity: 0; transform: translateY(-6px); } }
+.req[data-state='prefill'], .req[data-state='streaming'] { border-left-color: var(--run); }
+.req[data-state='done'] { border-left-color: var(--ok); }
+.req[data-state='error'] { border-left-color: var(--bad); }
+.req-head { display: flex; align-items: center; gap: 0.5rem; font-size: 12.5px; }
+.req-time { margin-left: auto; font: 11px var(--mono); }
+.pill { font: 600 10px var(--mono); text-transform: uppercase; padding: 0.1rem 0.4rem; border-radius: 4px; background: var(--line); color: var(--muted); }
+.req[data-state='prefill'] .pill { background: color-mix(in srgb, var(--run) 18%, transparent); color: var(--run); }
+.req[data-state='streaming'] .pill { background: var(--run); color: #fff; }
+.req[data-state='done'] .pill { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.req[data-state='error'] .pill { background: var(--bad); color: #fff; }
+.req-in { font: 11.5px/1.4 var(--mono); color: var(--muted); margin: 0.35rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.req-out {
+	margin: 0;
+	font: 11.5px/1.45 var(--mono);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	background: var(--code-bg);
+	border-radius: 6px;
+	padding: 0.4rem 0.5rem;
+}
+.req-out:empty { display: none; }
+.req[data-state='streaming'] .req-out::after { content: '▍'; color: var(--run); animation: pulse 0.8s infinite; }
+.req[data-state='done'] .req-out { display: none; }
+.req-found { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.4rem; font-size: 12px; }
+.req-found:empty { display: none; }
+.chip { padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 11.5px; }
+.chip.name { background: var(--name-bg); }
+.chip.addr { background: var(--addr-bg); }
+.err { color: var(--bad); font-family: var(--mono); font-size: 11.5px; }
+
+.ent-list { list-style: none; margin: 0 0 1.25rem; padding: 0; }
+.ent-item {
+	display: flex;
+	flex-direction: column;
+	padding: 0.45rem 0.6rem;
+	border-radius: 8px;
+	border-left: 3px solid var(--name);
+	background: var(--panel);
+	margin-bottom: 4px;
+	cursor: pointer;
+}
+.ent-item.addr { border-left-color: var(--addr); }
+.ent-item:hover { background: color-mix(in srgb, var(--ink) 6%, var(--panel)); }
+.ent-item .where { font: 10.5px var(--mono); color: var(--muted); }
+.ent-item.new { animation: slide 0.3s ease-out; }
+.ent-item.bump { animation: flash 0.6s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--accent) 22%, var(--panel)); } }
+.count { font: 600 12px var(--mono); color: var(--ink); }
+
+#summary {
+	background: color-mix(in srgb, var(--ok) 12%, var(--panel));
+	border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
+	border-radius: 10px;
+	padding: 0.6rem 0.8rem;
+	font-size: 13px;
+}
+
+/* ---------- request detail dialog ---------- */
+dialog {
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	background: var(--panel);
+	color: var(--ink);
+	padding: 0;
+	width: min(820px, 100% - 32px);
+	max-height: min(88vh, 900px);
+}
+dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+.dlg-head { display: flex; align-items: start; gap: 1rem; padding: 1rem 1.2rem 0.5rem; position: sticky; top: 0; background: var(--panel); }
+.dlg-head h3 { margin: 0; font-size: 1rem; }
+.dlg-head p { margin: 0.2rem 0 0; font: 12px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.dlg-head button { margin-left: auto; background: none; border: 0; font-size: 1.4rem; line-height: 1; cursor: pointer; color: var(--muted); }
+.dlg-body { padding: 0 1.2rem 1.2rem; }
+.dlg-body h4 { margin: 1rem 0 0.35rem; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.dlg-body pre {
+	margin: 0;
+	padding: 0.7rem 0.8rem;
+	background: var(--code-bg);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	font: 12px/1.5 var(--mono);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.dlg-body pre.err { color: var(--bad); }
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+header.top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1.25rem;
+	background: var(--panel);
+	border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.brand h1 { font-size: 1.05rem; margin: 0; }
+.controls { display: flex; align-items: center; gap: 0.75rem; }
+.bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+	padding: 0.6rem 1.25rem;
+	border-bottom: 1px solid var(--line);
+}
+.cols {
+	flex: 1;
+	min-height: 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr);
+}
+.col { overflow: auto; padding: 1rem 1.25rem; border-right: 1px solid var(--line); }
+.col:last-child { border-right: 0; }
+#summary { margin-bottom: 1rem; }
+@media (max-width: 1000px) {
+	body { height: auto; overflow: auto; }
+	.cols { grid-template-columns: 1fr; }
+	.col { max-height: 80vh; border-right: 0; border-bottom: 1px solid var(--line); }
+}
+	</style>
+</head>
+<body data-phase="idle">
+	<header class="top">
+		<div class="brand">
+			<a class="back" href="../" aria-label="Back to home">←</a>
+			<h1>Finding names &amp; addresses with a tiny LLM</h1>
+			<span class="badge-model" id="modelName"></span>
+			<span class="muted">×<span id="conc"></span> parallel requests</span>
+		</div>
+		<div class="controls">
+			<label class="muted">Speed <select id="speed" aria-label="Speed">
+					<option value="0.5">0.5×</option>
+					<option value="1" selected>1×</option>
+					<option value="2">2×</option>
+				</select></label>
+			<button id="startBtn" class="btn">Start demo</button>
+		</div>
+	</header>
+	<section class="bar">
+		<div class="stats">
+				<div class="stat"><b id="st-done"></b><span>Chunks done</span></div>
+				<div class="stat"><b id="st-flight"></b><span>In flight</span></div>
+				<div class="stat"><b id="st-tok"></b><span>Tokens out</span></div>
+				<div class="stat"><b id="st-tps"></b><span>Tok/s</span></div>
+				<div class="stat"><b id="st-time"></b><span>Elapsed</span></div>
+			</div>
+		<div id="grid"></div>
+	</section>
+	<main class="cols">
+		<section class="col" id="doc">
+			<div class="file-bar" id="fileName">riverbend-annual-report.pdf</div>
+			<div id="pdfView"></div>
+			<div id="mdView" class="md" hidden></div>
+			<div id="overlay" hidden><div><span class="spinner"></span><span id="overlayText"></span></div></div>
+		</section>
+		<section class="col">
+			<h2 class="panel-title">LLM requests <span class="muted">click one for details</span></h2>
+			<details class="sys">
+				<summary>System prompt <span class="muted">(same for every request)</span></summary>
+				<pre id="sysPrompt"></pre>
+			</details>
+			<div id="reqList"></div>
+			<p class="empty">Each chunk of the document is sent to the model as its own request. They'll show up here as they run.</p>
+		</section>
+		<section class="col">
+			<div id="summary" hidden></div>
+			<h2 class="panel-title">Names <span class="count" id="nameCount">0</span></h2>
+			<ul class="ent-list" id="names"></ul>
+			<h2 class="panel-title">Addresses <span class="count" id="addrCount">0</span></h2>
+			<ul class="ent-list" id="addrs"></ul>
+			<p class="empty found-empty">Names and addresses appear here as soon as each request is parsed. Hover one to see it in the document.</p>
+		</section>
+	</main>
+	<dialog id="detail">
+	<div class="dlg-head">
+		<div>
+			<h3 id="dlgTitle"></h3>
+			<p id="dlgMeta"></p>
+		</div>
+		<button data-close aria-label="Close">×</button>
+	</div>
+	<div class="dlg-body">
+		<h4>Request body</h4>
+		<pre id="dlgReq"></pre>
+		<h4>Raw model output (streamed)</h4>
+		<pre id="dlgRaw"></pre>
+		<h4>Parsed</h4>
+		<pre id="dlgParsed"></pre>
+	</div>
+</dialog>
+	<script>
+// Everything here is simulated: no model is called. The "model" answers with the
+// entities annotated in DOC ([[n:...]] = name, [[a:...]] = address), streamed token
+// by token with realistic latencies, CONCURRENCY requests at a time.
+
+const MODEL = 'qwen3-0.6b';
+const ENDPOINT = 'http://localhost:8080/v1/chat/completions';
+const CONCURRENCY = 6;
+const FLAKY_CHUNK = 7; // answers with broken JSON on its first attempt, to show the retry path
+const SYSTEM = `You extract personal data from a fragment of a document.
+Return ONLY a JSON object: {"names": [...], "addresses": [...]}
+- names: full names of people, exactly as written.
+- addresses: postal addresses, exactly as written.
+Use empty arrays when there is nothing to report. /no_think`;
+
+const DOC = [
+	{ t: 'h1', s: 'Riverbend Housing Cooperative' },
+	{ t: 'meta', s: 'Annual tenant report · Prepared by [[n:Helena Marsh]], Secretary · Filed 14 March 2026' },
+	{ t: 'h2', s: '1. Board of directors' },
+	{ t: 'p', s: 'The board met on 2 February at the cooperative office, [[a:48 Lantern Row, Millbrook MB4 2QT]]. Present were [[n:Helena Marsh]] (secretary), [[n:Tomás Iriarte]] (treasurer) and [[n:Priya Venkataraman]], who chaired the session in the absence of [[n:Gordon Ashby]].' },
+	{ t: 'p', s: '[[n:Gordon Ashby]] sent his apologies from his temporary residence at [[a:Flat 3, 17 Quarry Lane, Eastholme EH2 9LD]] and asked that his vote on item 4 be recorded in favour.' },
+	{ t: 'h2', s: '2. Maintenance requests' },
+	{ t: 'p', s: 'Water damage was reported by [[n:Odile Brennan]] at [[a:12B Willow Court]] after the storm of 19 January. The contractor, [[n:Samuel Kerr]] of Kerr & Daughters Roofing, inspected the unit on 23 January and estimated repairs at £3,400.' },
+	{ t: 'p', s: 'The ground-floor tenants at [[a:6 Willow Court]], [[n:Mei-Lin Chow]] and [[n:Arturo Benítez]], reported a faulty boiler. Both asked to be contacted by email rather than at home.' },
+	{ t: 'h2', s: '3. New members', pb: true },
+	{ t: 'ul', s: "[[n:Fatima Zahra Idrissi]], moving into [[a:21 Willow Court]] on 1 April\n[[n:Declan O'Rourke]], transferring from [[a:9 Ferry Street, Millbrook MB4 1AS]]\n[[n:Ingrid Solberg]] and her son [[n:Nils Solberg]], [[a:3 Lantern Row]]" },
+	{ t: 'h2', s: '4. Correspondence' },
+	{ t: 'p', s: 'A letter from Councillor [[n:Rebecca Thorne]] of Millbrook Borough Council, [[a:Town Hall, 1 Market Square, Millbrook MB4 1AA]], confirms a grant of £12,000 for the community garden.' },
+	{ t: 'p', s: "The garden plot sits behind Willow Court and has no postal address of its own. [[n:Mr Ashby]]'s proposal to name it after the late [[n:Edith Clarke]], a founding member, was warmly received." },
+	{ t: 'h2', s: '5. Next meeting' },
+	{ t: 'p', s: 'The next meeting will be held on 6 May at [[a:48 Lantern Row]]. Apologies should be sent in writing to [[n:Helena Marsh]], [[a:PO Box 112, Millbrook MB4 9ZZ]].' },
+	{ t: 'sign', s: 'Signed,\n[[n:Helena Marsh]], Secretary\n[[n:Priya Venkataraman]], Chair' }
+];
+
+// ---------- text helpers ----------
+
+const ANN = /\[\[(n|a):([^\]]+)\]\]/g;
+const $ = (sel) => document.querySelector(sel);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const plain = (s) => s.replace(ANN, '$2');
+const pad = (n) => String(n).padStart(2, '0');
+const rand = (a, b) => a + Math.random() * (b - a);
+const tokens = (s) => Math.max(1, Math.round(s.length / 3.7));
+
+function extract(s) {
+	const out = { names: [], addresses: [] };
+	for (const [, kind, value] of s.matchAll(ANN)) {
+		const list = kind === 'n' ? out.names : out.addresses;
+		if (!list.includes(value)) list.push(value);
+	}
+	return out;
+}
+
+// Inline HTML for a block's text; with marks=true, entities become (hidden) <mark>s.
+function inline(s, marks) {
+	let html = '';
+	let last = 0;
+	for (const m of s.matchAll(ANN)) {
+		html += esc(s.slice(last, m.index));
+		html += marks
+			? `<mark class="ent ${m[1] === 'n' ? 'name' : 'addr'}" data-e="${esc(m[2])}">${esc(m[2])}</mark>`
+			: esc(m[2]);
+		last = m.index + m[0].length;
+	}
+	return html + esc(s.slice(last));
+}
+
+// The Markdown text of a block, as the PDF converter would produce it.
+function markdown(b) {
+	const t = plain(b.s);
+	if (b.t === 'h1') return '# ' + t;
+	if (b.t === 'h2') return '## ' + t;
+	if (b.t === 'meta') return '*' + t + '*';
+	if (b.t === 'ul') return t.split('\n').map((l) => '- ' + l).join('\n');
+	return t;
+}
+
+// ---------- rendering ----------
+
+function renderPdf() {
+	const pages = [[]];
+	for (const b of DOC) {
+		if (b.pb) pages.push([]);
+		pages.at(-1).push(b);
+	}
+	return pages
+		.map((blocks, i) => {
+			const body = blocks
+				.map((b) => {
+					const t = inline(b.s, false);
+					if (b.t === 'h1') return `<h1>${t}</h1>`;
+					if (b.t === 'h2') return `<h2>${t}</h2>`;
+					if (b.t === 'meta') return `<p class="meta">${t}</p>`;
+					if (b.t === 'ul') return `<ul>${t.split('\n').map((l) => `<li>${l}</li>`).join('')}</ul>`;
+					if (b.t === 'sign') return `<p class="sign">${t.replaceAll('\n', '<br>')}</p>`;
+					return `<p>${t}</p>`;
+				})
+				.join('');
+			return `<div class="page">${body}<div class="folio">Page ${i + 1} of ${pages.length}</div></div>`;
+		})
+		.join('');
+}
+
+function renderMarkdown() {
+	const mk = (x) => `<span class="mk">${x}</span>`;
+	return DOC.map((b, i) => {
+		const lines = b.s.split('\n').map((l) => inline(l, true));
+		let src;
+		if (b.t === 'h1') src = `<span class="h1">${mk('# ')}${lines[0]}</span>`;
+		else if (b.t === 'h2') src = `<span class="h2">${mk('## ')}${lines[0]}</span>`;
+		else if (b.t === 'meta') src = `<em>${mk('*')}${lines[0]}${mk('*')}</em>`;
+		else if (b.t === 'ul') src = lines.map((l) => mk('- ') + l).join('<br>');
+		else src = lines.join('<br>');
+		const brk = b.pb ? `<div class="pgbreak">-----</div>` : '';
+		return `${brk}<div class="blk" data-c="${i}"><span class="cid">#${pad(i + 1)}</span><div class="src">${src}</div></div>`;
+	}).join('');
+}
+
+function renderGrid() {
+	$('#grid').innerHTML = DOC.map((_, i) => `<span class="cell" data-c="${i}" title="Chunk ${i + 1}">${i + 1}</span>`).join('');
+}
+
+// ---------- state ----------
+
+let run = 0; // bumped on every start; stale async work from a previous run bails out
+let speed = 1;
+const CANCEL = Symbol('cancel');
+const sleep = (ms, r) =>
+	new Promise((res, rej) => setTimeout(() => (r === run ? res() : rej(CANCEL)), ms / speed));
+
+let stats, timer;
+const requests = new Map(); // request id -> record shown in the detail view
+const found = new Map(); // "name:value" | "addr:value" -> Set of chunk indexes
+
+function resetUi() {
+	clearInterval(timer);
+	stats = { done: 0, flight: 0, sent: 0, retries: 0, tokOut: 0, t0: 0, t1: 0 };
+	requests.clear();
+	found.clear();
+	$('#reqList').innerHTML = '';
+	$('#names').innerHTML = '';
+	$('#addrs').innerHTML = '';
+	$('#summary').hidden = true;
+	document.body.classList.remove('has-results');
+	renderGrid();
+	updateStats();
+}
+
+function updateStats() {
+	const elapsed = ((stats.t1 || performance.now()) - stats.t0) / 1000;
+	$('#st-done').textContent = `${stats.done}/${DOC.length}`;
+	$('#st-flight').textContent = stats.flight;
+	$('#st-tok').textContent = stats.tokOut;
+	$('#st-tps').textContent = stats.t0 && elapsed > 0.2 ? Math.round(stats.tokOut / elapsed) : '–';
+	$('#st-time').textContent = stats.t0 ? elapsed.toFixed(1) + 's' : '–';
+	setBadge('requests', stats.flight || null);
+	setBadge('found', found.size || null);
+}
+
+function setBadge(tab, n) {
+	const el = document.querySelector(`[data-badge="${tab}"]`);
+	if (el) {
+		el.textContent = n ?? '';
+		el.hidden = n == null;
+	}
+}
+
+function setCell(i, state) {
+	const cell = document.querySelector(`.cell[data-c="${i}"]`);
+	cell.className = 'cell ' + state;
+	document.querySelector(`.blk[data-c="${i}"]`)?.setAttribute('data-state', state);
+}
+
+function overlay(text) {
+	$('#overlay').hidden = !text;
+	if (text) $('#overlayText').textContent = text;
+}
+
+// ---------- the demo ----------
+
+async function start() {
+	const r = ++run;
+	resetUi();
+	$('#startBtn').textContent = 'Restart';
+	document.body.dataset.phase = 'converting';
+	$('#doc').scrollTop = 0;
+	$('#pdfView').hidden = false;
+	$('#mdView').hidden = true;
+	try {
+		overlay('Converting PDF → Markdown…');
+		await sleep(1400, r);
+		$('#mdView').innerHTML = renderMarkdown();
+		$('#pdfView').hidden = true;
+		$('#mdView').hidden = false;
+		$('#fileName').textContent = 'riverbend-annual-report.md';
+		overlay(`Splitting into ${DOC.length} chunks…`);
+		document.body.dataset.phase = 'chunking';
+		await sleep(900, r);
+		overlay(null);
+
+		document.body.dataset.phase = 'running';
+		stats.t0 = performance.now();
+		timer = setInterval(updateStats, 100);
+		let next = 0;
+		const worker = async () => {
+			while (next < DOC.length) await request(next++, 1, r);
+		};
+		await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+		finish();
+	} catch (e) {
+		if (e !== CANCEL) throw e;
+	}
+}
+
+function modelOutput(entities, broken) {
+	const q = (list) => list.map((v) => JSON.stringify(v)).join(', ');
+	// Qwen3 always emits an (empty, thanks to /no_think) reasoning block first.
+	const think = '<think>\n\n</think>\n\n';
+	if (broken) {
+		// A classic small-model slip: forgets to close the "names" array.
+		return think + `{"names": [${q(entities.names)}, "addresses": [${q(entities.addresses)}]}`;
+	}
+	return think + `{"names": [${q(entities.names)}], "addresses": [${q(entities.addresses)}]}`;
+}
+
+async function request(i, attempt, r) {
+	const b = DOC[i];
+	const id = ++stats.sent;
+	const body = {
+		model: MODEL,
+		temperature: 0,
+		max_tokens: 256,
+		stream: true,
+		messages: [
+			{ role: 'system', content: SYSTEM },
+			{ role: 'user', content: `Fragment ${i + 1}/${DOC.length}:\n\n${markdown(b)}` }
+		]
+	};
+	const entities = extract(b.s);
+	const output = modelOutput(entities, i + 1 === FLAKY_CHUNK && attempt === 1);
+	const rec = { id, chunk: i, attempt, body, output, raw: '', parsed: null, error: null, t0: performance.now(), ms: 0, tokIn: tokens(JSON.stringify(body)), tokOut: 0 };
+	requests.set(id, rec);
+
+	const card = document.createElement('div');
+	card.className = 'req new';
+	card.dataset.id = id;
+	card.dataset.state = 'prefill';
+	card.innerHTML = `
+		<div class="req-head">
+			<span class="pill"></span>
+			<b>#${pad(id)}</b>
+			<span class="muted">chunk ${i + 1}${attempt > 1 ? ' · retry' : ''}</span>
+			<span class="req-time muted"></span>
+		</div>
+		<div class="req-in">${esc(markdown(b).slice(0, 110))}${markdown(b).length > 110 ? '…' : ''}</div>
+		<pre class="req-out"></pre>
+		<div class="req-found"></div>`;
+	card.onclick = () => openDetail(id);
+	$('#reqList').prepend(card);
+	const pill = card.querySelector('.pill');
+	const out = card.querySelector('.req-out');
+	const time = card.querySelector('.req-time');
+	const tick = () => (time.textContent = ((performance.now() - rec.t0) / 1000).toFixed(2) + 's');
+
+	stats.flight++;
+	setCell(i, 'running');
+	pill.textContent = 'prefill';
+	await sleep(rand(500, 1800), r);
+
+	card.dataset.state = 'streaming';
+	pill.textContent = 'streaming';
+	let pos = 0;
+	while (pos < output.length) {
+		const piece = output.slice(pos, (pos += Math.round(rand(2, 5))));
+		rec.raw += piece;
+		rec.tokOut++;
+		stats.tokOut++;
+		out.textContent = rec.raw;
+		tick();
+		await sleep(1000 / rand(18, 32), r);
+	}
+	rec.ms = performance.now() - rec.t0;
+	stats.flight--;
+
+	try {
+		rec.parsed = JSON.parse(rec.raw.replace(/<think>[\s\S]*?<\/think>\s*/, ''));
+	} catch (e) {
+		rec.error = e.message;
+		card.dataset.state = 'error';
+		pill.textContent = 'bad JSON';
+		card.querySelector('.req-found').innerHTML = `<span class="err">${esc(e.message)} → retrying</span>`;
+		stats.retries++;
+		setCell(i, 'retry');
+		await sleep(250, r);
+		return request(i, attempt + 1, r);
+	}
+
+	card.dataset.state = 'done';
+	pill.textContent = 'done';
+	const { names, addresses } = rec.parsed;
+	card.querySelector('.req-found').innerHTML =
+		names.map((v) => `<span class="chip name">${esc(v)}</span>`).join('') +
+		addresses.map((v) => `<span class="chip addr">${esc(v)}</span>`).join('') ||
+		'<span class="muted">nothing found</span>';
+	stats.done++;
+	setCell(i, 'done');
+	reveal(i, names, 'name');
+	reveal(i, addresses, 'addr');
+	updateStats();
+}
+
+function reveal(i, values, kind) {
+	const blk = document.querySelector(`.blk[data-c="${i}"]`);
+	for (const v of values) {
+		for (const m of blk.querySelectorAll(`mark.${kind}`)) if (m.dataset.e === v) m.classList.add('on', 'pop');
+		const key = kind + ':' + v;
+		const isNew = !found.has(key);
+		if (isNew) found.set(key, new Set());
+		found.get(key).add(i);
+		renderEntity(kind, v, isNew);
+	}
+	if (values.length) document.body.classList.add('has-results');
+}
+
+function renderEntity(kind, value, isNew) {
+	const list = kind === 'name' ? $('#names') : $('#addrs');
+	const chunks = [...found.get(kind + ':' + value)];
+	let li = [...list.children].find((el) => el.dataset.e === value);
+	if (!li) {
+		li = document.createElement('li');
+		li.dataset.e = value;
+		li.className = 'ent-item ' + kind;
+		li.onmouseenter = () => focusEntity(value, true);
+		li.onmouseleave = () => focusEntity(value, false);
+		li.onclick = () => jumpTo(value);
+		list.append(li);
+	}
+	li.innerHTML = `<span class="v">${esc(value)}</span><span class="where">${chunks.map((c) => '#' + pad(c + 1)).join(' ')}</span>`;
+	if (!isNew) {
+		li.classList.remove('bump');
+		void li.offsetWidth;
+	}
+	li.classList.add(isNew ? 'new' : 'bump');
+	$(`#${kind === 'name' ? 'nameCount' : 'addrCount'}`).textContent = list.children.length;
+}
+
+function focusEntity(value, on) {
+	for (const m of document.querySelectorAll('mark.ent.on')) if (m.dataset.e === value) m.classList.toggle('focus', on);
+}
+
+function jumpTo(value) {
+	const m = [...document.querySelectorAll('mark.ent.on')].find((el) => el.dataset.e === value);
+	if (!m) return;
+	window.showTab?.('doc');
+	m.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	m.classList.add('focus');
+	setTimeout(() => m.classList.remove('focus'), 1400);
+}
+
+function finish() {
+	clearInterval(timer);
+	stats.t1 = performance.now();
+	updateStats();
+	document.body.dataset.phase = 'done';
+	$('#startBtn').textContent = 'Replay';
+	const names = [...found.keys()].filter((k) => k.startsWith('name:')).length;
+	$('#summary').innerHTML =
+		`<b>Done.</b> ${stats.sent} requests to <code>${MODEL}</code> (${CONCURRENCY} in parallel, ${stats.retries} retried) in ` +
+		`${((stats.t1 - stats.t0) / 1000).toFixed(1)}s · found <b>${names}</b> names and <b>${found.size - names}</b> addresses.`;
+	$('#summary').hidden = false;
+}
+
+// ---------- request detail ----------
+
+function openDetail(id) {
+	const rec = requests.get(id);
+	const done = rec.parsed || rec.error;
+	$('#dlgTitle').textContent = `Request #${pad(id)} · chunk ${rec.chunk + 1}${rec.attempt > 1 ? ' (retry)' : ''}`;
+	$('#dlgMeta').textContent =
+		`POST ${ENDPOINT} · ${rec.tokIn} tokens in · ${rec.tokOut} tokens out` +
+		(done ? ` · ${(rec.ms / 1000).toFixed(2)}s` : ' · in progress');
+	$('#dlgReq').textContent = JSON.stringify(rec.body, null, 2);
+	$('#dlgRaw').textContent = rec.raw || '(waiting for first token)';
+	$('#dlgParsed').textContent = rec.error
+		? `JSON.parse failed: ${rec.error}\n→ request sent again`
+		: rec.parsed
+			? JSON.stringify(rec.parsed, null, 2)
+			: '(not finished yet)';
+	$('#dlgParsed').classList.toggle('err', !!rec.error);
+	$('#detail').showModal();
+}
+
+// ---------- wiring ----------
+
+document.addEventListener('animationend', (e) => e.target.classList.remove('new', 'bump', 'pop'));
+$('#pdfView').innerHTML = renderPdf();
+$('#sysPrompt').textContent = SYSTEM;
+$('#modelName').textContent = MODEL;
+$('#conc').textContent = CONCURRENCY;
+$('#startBtn').onclick = start;
+$('#speed').onchange = (e) => (speed = Number(e.target.value));
+$('#detail').onclick = (e) => {
+	if (e.target === e.currentTarget || e.target.closest('[data-close]')) $('#detail').close();
+};
+resetUi();
+	</script>
+</body>
+</html>

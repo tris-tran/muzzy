@@ -1,0 +1,8 @@
+node_modules/
+.svelte-kit/
+build/
+dist/
+.DS_Store
+
+# The private site's source is its own repo and must never be pushed here.
+/private/
