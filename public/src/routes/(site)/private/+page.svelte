@@ -13,7 +13,7 @@
 		busy = true;
 		error = '';
 		try {
-			const res = await fetch(asset('/vault.json'));
+			const res = await fetch(asset('vault.json'));
 			if (!res.ok) throw new Error('No private site has been built yet.');
 			const vault = await res.json();
 
