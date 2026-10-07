@@ -135,17 +135,17 @@
 	.step-lede strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	/* A generic search page sketch */
 	.mock {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 16px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius-lg);
 		padding: 1.25rem;
-		box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.25);
-		font-family: system-ui, sans-serif;
+		box-shadow: var(--shadow-lift);
+		font-family: var(--font-ui);
 	}
 	.bar-row {
 		position: relative;
@@ -155,9 +155,9 @@
 		align-items: center;
 		gap: 0.6rem;
 		padding: 0.7rem 1rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		color: #8a8378;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--pill);
+		color: var(--ink-soft);
 		min-height: 1.4rem;
 	}
 	.query {
@@ -183,8 +183,8 @@
 		position: relative;
 		margin-top: 1.1rem;
 		padding: 1rem 1.1rem;
-		border-radius: 12px;
-		background: #f6f1ea;
+		border-radius: var(--radius-sm);
+		background: var(--track);
 		min-height: 8.5rem;
 		opacity: 0.35;
 		transition:
@@ -193,7 +193,7 @@
 	}
 	.overview.on {
 		opacity: 1;
-		box-shadow: 0 0 0 2px #f0a58f;
+		box-shadow: 0 0 0 2px var(--accent-mid);
 	}
 	.overview-head {
 		display: flex;
@@ -228,7 +228,7 @@
 	.shimmer span {
 		height: 0.7rem;
 		border-radius: 4px;
-		background: linear-gradient(90deg, #ece4d9 25%, #f8f3ec 50%, #ece4d9 75%);
+		background: linear-gradient(90deg, var(--track) 25%, var(--track) 50%, var(--track) 75%);
 		background-size: 200% 100%;
 		animation: shimmer 1s linear infinite;
 	}
@@ -253,11 +253,11 @@
 	.line {
 		height: 0.55rem;
 		border-radius: 4px;
-		background: #eee8df;
+		background: var(--track);
 	}
 	.line.link {
 		width: 45%;
-		background: #d9d2e8;
+		background: var(--track-strong);
 	}
 	.line.short {
 		width: 70%;
@@ -265,11 +265,11 @@
 
 	/* Little labels pointing out the two halves */
 	.tag {
-		font-family: Georgia, serif;
+		font-family: var(--font-body);
 		font-size: 0.78rem;
 		font-weight: normal;
 		padding: 0.2rem 0.6rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		background: var(--accent);
 		color: white;
 		white-space: nowrap;
@@ -308,8 +308,8 @@
 		font: inherit;
 		font-size: 0.9rem;
 		background: none;
-		border: 1px solid var(--line);
-		border-radius: 999px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--pill);
 		padding: 0.35rem 0.9rem;
 		color: var(--ink-soft);
 		cursor: pointer;

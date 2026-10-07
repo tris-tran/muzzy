@@ -34,7 +34,7 @@
 		scroll-snap-align: start;
 	}
 	.step + :global(.step) {
-		border-top: 1px solid var(--line);
+		border-top: var(--bw) solid var(--line);
 	}
 	.content {
 		width: 100%;

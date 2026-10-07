@@ -13,9 +13,8 @@
 	}
 	h1 {
 		margin: 0;
-		font-size: 3.4rem;
+		font-size: calc(3.4rem * var(--display-scale));
 		line-height: 1.05;
-		font-weight: normal;
 		text-wrap: balance;
 	}
 	.step-lede {
@@ -24,7 +23,7 @@
 	}
 	@media (max-width: 600px) {
 		h1 {
-			font-size: 2.3rem;
+			font-size: calc(2.3rem * var(--display-scale));
 		}
 	}
 </style>

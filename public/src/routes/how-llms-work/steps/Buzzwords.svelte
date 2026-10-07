@@ -88,7 +88,7 @@
 	.step-lede strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	.cloud {
@@ -113,8 +113,8 @@
 	}
 	.word {
 		font: inherit;
-		border-radius: 999px;
-		border: 1px solid var(--line);
+		border-radius: var(--pill);
+		border: var(--bw) solid var(--line);
 		background: var(--card);
 		color: var(--ink);
 		cursor: pointer;
@@ -136,7 +136,7 @@
 	.size2 {
 		font-size: 1.05rem;
 		padding: 0.35rem 0.9rem;
-		color: #3d3a35;
+		color: var(--ink);
 	}
 	.size1 {
 		font-size: 0.88rem;
@@ -150,7 +150,7 @@
 	}
 	.more {
 		font-style: italic;
-		color: #b5ada1;
+		color: var(--muted);
 		padding: 0 0.5rem;
 	}
 
@@ -169,8 +169,8 @@
 		display: inline-block;
 		margin: 0;
 		padding: 0.7rem 1.2rem;
-		border-radius: 14px;
-		background: #fbe6de;
+		border-radius: var(--radius);
+		background: var(--accent-soft);
 		line-height: 1.5;
 	}
 	.ask-label {
@@ -196,8 +196,8 @@
 		font: inherit;
 		font-size: 0.9rem;
 		background: none;
-		border: 1px solid var(--ink-soft);
-		border-radius: 999px;
+		border: var(--bw) solid var(--ink-soft);
+		border-radius: var(--pill);
 		padding: 0.4rem 1rem;
 		color: var(--ink);
 		cursor: pointer;

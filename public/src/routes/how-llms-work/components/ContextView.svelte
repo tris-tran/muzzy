@@ -29,34 +29,34 @@
 		overflow-y: auto;
 		box-sizing: border-box;
 		padding: 1rem 1.1rem;
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+		font-family: var(--font-mono);
 		font-size: 0.82rem;
 		line-height: 1.7;
 		white-space: pre-wrap;
 		overflow-wrap: anywhere;
-		color: rgba(250, 247, 242, 0.88);
+		color: color-mix(in srgb, var(--on-dark) 88%, transparent);
 	}
 	.tag {
-		color: #c9a7f0;
-		background: rgba(201, 167, 240, 0.12);
+		color: var(--tag);
+		background: color-mix(in srgb, var(--tag) 12%, transparent);
 		border-radius: 4px;
 		padding: 0 0.15em;
 	}
 	.role {
-		color: #f0a58f;
+		color: var(--accent-mid);
 		font-weight: bold;
 	}
 	.fresh {
-		background: rgba(240, 165, 143, 0.18);
+		background: color-mix(in srgb, var(--accent-mid) 18%, transparent);
 		border-radius: 3px;
 		transition: background 1.5s ease;
 	}
 	.num {
-		color: #f0a58f;
+		color: var(--accent-mid);
 		animation: flip 0.25s ease-out both;
 	}
 	.tagnum {
-		color: #c9a7f0;
+		color: var(--tag);
 	}
 	@keyframes flip {
 		from {
@@ -68,7 +68,7 @@
 		width: 0.5em;
 		height: 1.05em;
 		vertical-align: -0.15em;
-		background: #f0a58f;
+		background: var(--accent-mid);
 		animation: blink 0.8s steps(2) infinite;
 	}
 	@keyframes blink {

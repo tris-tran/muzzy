@@ -157,7 +157,7 @@
 	.takeaway strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	.body {
@@ -187,7 +187,7 @@
 		align-items: baseline;
 		padding: 0.5rem 0.7rem;
 		border: 1px solid transparent;
-		border-radius: 10px;
+		border-radius: var(--radius-sm);
 		background: none;
 		font: inherit;
 		color: inherit;
@@ -200,7 +200,7 @@
 	.bars button.active {
 		background: var(--card);
 		border-color: var(--line);
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+		box-shadow: var(--shadow);
 	}
 	.name {
 		grid-area: name;
@@ -225,14 +225,14 @@
 		grid-area: track;
 		position: relative;
 		height: 0.75rem;
-		border-radius: 999px;
-		background: #f1ebe2;
+		border-radius: var(--pill);
+		background: var(--track);
 	}
 	.fill {
 		position: absolute;
 		inset: 0 auto 0 0;
 		border-radius: inherit;
-		background: #d9cfc1;
+		background: var(--track-strong);
 		min-width: 0;
 		transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 	}
@@ -253,28 +253,28 @@
 		transform: translateY(-50%);
 		font-size: 0.7rem;
 		font-style: italic;
-		color: #a39b8f;
+		color: var(--muted);
 		white-space: nowrap;
 	}
 
 	/* The selected model, made relatable */
 	.detail {
-		background: #17151a;
+		background: var(--dark);
 		color: var(--paper);
-		border-radius: 18px;
+		border-radius: var(--radius-lg);
 		padding: 1.5rem 1.6rem;
-		box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.45);
+		box-shadow: var(--shadow-lift);
 	}
 	.big {
 		margin: 0;
 		font-size: 2.4rem;
 		line-height: 1.1;
-		color: #f0a58f;
+		color: var(--accent-mid);
 	}
 	.unit {
 		margin: 0.2rem 0 1.25rem;
 		font-size: 0.9rem;
-		color: rgba(250, 247, 242, 0.6);
+		color: color-mix(in srgb, var(--on-dark) 60%, transparent);
 	}
 	.compare {
 		display: grid;
@@ -286,14 +286,14 @@
 		font-size: 0.75rem;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
-		color: rgba(250, 247, 242, 0.5);
+		color: color-mix(in srgb, var(--on-dark) 50%, transparent);
 	}
 	.a {
 		font-size: 1.35rem;
 	}
 	.like {
 		font-style: italic;
-		color: rgba(250, 247, 242, 0.7);
+		color: color-mix(in srgb, var(--on-dark) 70%, transparent);
 	}
 
 	.takeaway {

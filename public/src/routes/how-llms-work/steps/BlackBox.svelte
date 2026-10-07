@@ -149,8 +149,8 @@
 		font: inherit;
 		font-size: 0.95rem;
 		padding: 0.45rem 0.9rem;
-		border-radius: 999px;
-		border: 1px solid var(--line);
+		border-radius: var(--pill);
+		border: var(--bw) solid var(--line);
 		background: var(--card);
 		color: var(--ink);
 		cursor: pointer;
@@ -179,8 +179,8 @@
 	}
 	.side {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 14px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius);
 		padding: 1.1rem 1.25rem;
 		min-height: 9rem;
 		display: flex;
@@ -250,7 +250,7 @@
 		}
 	}
 	.placeholder {
-		color: #b5ada1;
+		color: var(--muted);
 		font-style: italic;
 	}
 
@@ -261,11 +261,11 @@
 		color: var(--paper);
 		border: 0;
 		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		cursor: pointer;
 	}
 	.send:hover:not(:disabled) {
-		background: #000;
+		background: var(--ink);
 	}
 	.send:disabled {
 		opacity: 0.4;

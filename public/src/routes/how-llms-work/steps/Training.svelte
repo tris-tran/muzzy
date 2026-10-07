@@ -230,7 +230,7 @@
 	.takeaway strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	/* Stage: text → box → guess */
@@ -242,8 +242,8 @@
 	}
 	.panel {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 14px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius);
 		padding: 1.1rem 1.25rem;
 		min-height: 12rem;
 		box-sizing: border-box;
@@ -252,7 +252,7 @@
 		transition: box-shadow 0.3s ease;
 	}
 	.stage[data-phase='reading'] .lesson {
-		box-shadow: 0 0 0 2px #f0a58f;
+		box-shadow: 0 0 0 2px var(--accent-mid);
 	}
 	.label {
 		font-size: 0.75rem;
@@ -273,7 +273,7 @@
 	.muted {
 		font-size: 1rem;
 		font-style: italic;
-		color: #b5ada1;
+		color: var(--muted);
 	}
 
 	/* The hidden word: a card that flips over */
@@ -296,7 +296,7 @@
 		min-width: 2.5em;
 	}
 	.front {
-		background: #fbe6de;
+		background: var(--accent-soft);
 		color: var(--accent);
 		transform: rotateY(180deg);
 	}
@@ -328,7 +328,7 @@
 	}
 	.dials circle {
 		fill: var(--card);
-		stroke: #bdb4a7;
+		stroke: var(--track-strong);
 		stroke-width: 1.5;
 		transition: stroke 0.3s;
 	}
@@ -340,10 +340,10 @@
 		transition: transform 0.8s cubic-bezier(0.3, 1.4, 0.5, 1);
 	}
 	.dials.wrong circle {
-		stroke: var(--accent);
+		stroke: var(--bad);
 	}
 	.dials.right circle {
-		stroke: #3f8f5a;
+		stroke: var(--good);
 	}
 	.dials-label {
 		font-size: 0.75rem;
@@ -370,7 +370,7 @@
 	.verdict {
 		margin-top: 0.8rem;
 		padding: 0.7rem 0.9rem;
-		border-radius: 10px;
+		border-radius: var(--radius-sm);
 		font-size: 0.98rem;
 		line-height: 1.45;
 		animation: appear 0.3s ease-out both;
@@ -381,12 +381,12 @@
 		margin-bottom: 0.15rem;
 	}
 	.verdict.right {
-		background: #e3f1e6;
-		color: #24583a;
+		background: var(--good-soft);
+		color: var(--good);
 	}
 	.verdict.wrong {
-		background: #fbe6de;
-		color: #8a3420;
+		background: var(--bad-soft);
+		color: var(--bad);
 	}
 	@keyframes appear {
 		from {
@@ -407,7 +407,7 @@
 	.ghost {
 		font: inherit;
 		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		cursor: pointer;
 	}
 	.run {
@@ -416,12 +416,12 @@
 		border: 0;
 	}
 	.run:hover:not(:disabled) {
-		background: #a8442c;
+		background: var(--accent-hover);
 	}
 	.ghost {
 		background: none;
 		color: var(--ink);
-		border: 1px solid var(--ink-soft);
+		border: var(--bw) solid var(--ink-soft);
 	}
 	.ghost:hover:not(:disabled) {
 		background: var(--ink);
@@ -466,10 +466,10 @@
 		width: 0.6rem;
 		height: 0.6rem;
 		border-radius: 2px;
-		background: #e7a08b;
+		background: var(--bad-light);
 	}
 	.history span.right {
-		background: #5aa774;
+		background: var(--good);
 	}
 	.stats {
 		margin: 0;

@@ -68,9 +68,9 @@
 	<svg viewBox="-10 0 {W + 20} {H}" role="img" aria-label="A small neural network: glowing dots joined by curved lines">
 		<defs>
 			<radialGradient id="orb">
-				<stop offset="0%" stop-color="#fff4ec" />
-				<stop offset="45%" stop-color="#f0a58f" />
-				<stop offset="100%" stop-color="#c2553a" />
+				<stop offset="0%" style="stop-color: var(--on-dark)" />
+				<stop offset="45%" style="stop-color: var(--accent-mid)" />
+				<stop offset="100%" style="stop-color: var(--accent)" />
 			</radialGradient>
 		</defs>
 
@@ -137,12 +137,12 @@
 <style>
 	.netbox {
 		position: relative;
-		background: radial-gradient(ellipse at 50% 40%, #221e26, #141216 70%);
-		border-radius: 20px;
+		background: radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--accent) 30%, var(--dark)), var(--dark) 75%);
+		border-radius: var(--radius-lg);
 		padding: 1.2rem 0.8rem 2.2rem;
 		box-shadow:
 			inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-			0 18px 40px -12px rgba(0, 0, 0, 0.45);
+			var(--shadow-lift);
 	}
 	svg {
 		display: block;
@@ -153,7 +153,7 @@
 
 	.edge {
 		fill: none;
-		stroke: #7fa7c9;
+		stroke: var(--cool);
 		stroke-linecap: round;
 		opacity: 0.2;
 		transition:
@@ -161,7 +161,7 @@
 			stroke 0.2s;
 	}
 	.edge.warm {
-		stroke: #f0a58f;
+		stroke: var(--accent-mid);
 	}
 	.edge.on {
 		opacity: 0.55;
@@ -180,12 +180,12 @@
 
 	.pulse {
 		fill: none;
-		stroke: #fff4ec;
+		stroke: var(--on-dark);
 		stroke-width: 5;
 		stroke-linecap: round;
 		stroke-dasharray: 0.1 100;
 		stroke-dashoffset: 0;
-		filter: drop-shadow(0 0 4px #f0a58f);
+		filter: drop-shadow(0 0 4px var(--accent-mid));
 		animation: travel 0.9s cubic-bezier(0.45, 0, 0.55, 1) both;
 	}
 	@keyframes travel {
@@ -195,19 +195,19 @@
 	}
 
 	.halo {
-		fill: #f0a58f;
+		fill: var(--accent-mid);
 		filter: blur(6px);
 		transition: opacity 0.5s ease;
 		pointer-events: none;
 	}
 	.node {
-		fill: #241f27;
-		stroke: #5a525f;
+		fill: color-mix(in srgb, var(--on-dark) 12%, var(--dark));
+		stroke: color-mix(in srgb, var(--on-dark) 30%, var(--dark));
 		stroke-width: 1.2;
 		transition: stroke 0.4s;
 	}
 	.node.on {
-		stroke: #f0a58f;
+		stroke: var(--accent-mid);
 	}
 	.core {
 		fill: url(#orb);
@@ -216,34 +216,34 @@
 	}
 
 	.wlabel {
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 		font-size: 9px;
-		fill: rgba(250, 247, 242, 0.6);
+		fill: color-mix(in srgb, var(--on-dark) 60%, transparent);
 		text-anchor: middle;
 		paint-order: stroke;
-		stroke: #1b181e;
+		stroke: var(--dark);
 		stroke-width: 4px;
 		pointer-events: none;
 	}
 	.olabel {
 		font-size: 12px;
-		fill: rgba(250, 247, 242, 0.3);
+		fill: color-mix(in srgb, var(--on-dark) 30%, transparent);
 		transition: fill 0.4s;
 	}
 	.olabel.on {
-		fill: rgba(250, 247, 242, 0.9);
+		fill: color-mix(in srgb, var(--on-dark) 90%, transparent);
 	}
 
 	.readout {
 		position: absolute;
 		left: 1.1rem;
 		bottom: 0.7rem;
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 		font-size: 0.75rem;
-		color: rgba(250, 247, 242, 0.55);
+		color: color-mix(in srgb, var(--on-dark) 55%, transparent);
 	}
 	.readout strong {
-		color: #f0a58f;
+		color: var(--accent-mid);
 	}
 
 	@media (prefers-reduced-motion: reduce) {

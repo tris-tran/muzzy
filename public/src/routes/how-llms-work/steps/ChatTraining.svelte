@@ -149,9 +149,9 @@
 		margin: 0;
 	}
 	code {
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 		font-size: 0.85em;
-		color: #8b62c4;
+		color: var(--tag-ink);
 	}
 
 	.body {
@@ -163,10 +163,10 @@
 	}
 
 	.raw {
-		background: #17151a;
-		border-radius: 18px;
+		background: var(--dark);
+		border-radius: var(--radius-lg);
 		padding: 0.9rem 0 1.1rem;
-		box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.45);
+		box-shadow: var(--shadow-lift);
 	}
 	.label {
 		display: block;
@@ -174,7 +174,7 @@
 		font-size: 0.72rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: rgba(250, 247, 242, 0.55);
+		color: color-mix(in srgb, var(--on-dark) 55%, transparent);
 	}
 	.raw :global(.context) {
 		height: auto;
@@ -198,25 +198,25 @@
 		padding: 0.15rem 0.5rem;
 		border-radius: 6px;
 		text-align: center;
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 		font-size: 0.85rem;
-		background: #3a3440;
-		color: rgba(250, 247, 242, 0.5);
+		background: color-mix(in srgb, var(--on-dark) 12%, var(--dark));
+		color: color-mix(in srgb, var(--on-dark) 50%, transparent);
 		transition:
 			background 0.3s,
 			color 0.3s;
 	}
 	.slot.current .card {
-		box-shadow: 0 0 0 2px #f0a58f;
+		box-shadow: 0 0 0 2px var(--accent-mid);
 	}
 	.card.shown {
-		background: rgba(250, 247, 242, 0.92);
-		color: #17151a;
+		background: color-mix(in srgb, var(--on-dark) 92%, transparent);
+		color: var(--dark);
 		animation: flip 0.35s ease-out;
 	}
 	.card.shown.end {
-		background: rgba(201, 167, 240, 0.25);
-		color: #c9a7f0;
+		background: color-mix(in srgb, var(--tag) 25%, transparent);
+		color: var(--tag);
 	}
 	@keyframes flip {
 		from {
@@ -226,18 +226,18 @@
 	.guess {
 		min-height: 1.2em;
 		font-size: 0.75rem;
-		color: rgba(250, 247, 242, 0.55);
+		color: color-mix(in srgb, var(--on-dark) 55%, transparent);
 		white-space: nowrap;
 	}
 	.guess em {
 		font-style: normal;
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 	}
 	.guess.ok {
-		color: #7fc996;
+		color: var(--good-light);
 	}
 	.guess.bad {
-		color: #f08f7a;
+		color: var(--bad-light);
 	}
 
 	.controls {
@@ -251,7 +251,7 @@
 	.ghost {
 		font: inherit;
 		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		cursor: pointer;
 	}
 	.run {
@@ -260,7 +260,7 @@
 		border: 0;
 	}
 	.run:hover:not(:disabled) {
-		background: #a8442c;
+		background: var(--accent-hover);
 	}
 	.run:disabled {
 		opacity: 0.4;
@@ -268,7 +268,7 @@
 	}
 	.ghost {
 		background: none;
-		border: 1px solid var(--ink-soft);
+		border: var(--bw) solid var(--ink-soft);
 		color: var(--ink);
 	}
 	.ghost:hover {
@@ -295,10 +295,10 @@
 		opacity: 1;
 	}
 	.score .ok {
-		color: #3f8f5a;
+		color: var(--good);
 	}
 	.score .bad {
-		color: var(--accent);
+		color: var(--bad);
 	}
 	.explain {
 		margin: 0.9rem 0 0;
@@ -314,8 +314,8 @@
 	/* Recap */
 	.recap {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 16px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius-lg);
 		padding: 1.3rem 1.5rem;
 	}
 	.recap h3 {
@@ -339,7 +339,7 @@
 	.recap strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	@media (max-width: 860px) {

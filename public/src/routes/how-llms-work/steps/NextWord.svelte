@@ -221,7 +221,7 @@
 	.takeaway strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	.phrases {
@@ -234,8 +234,8 @@
 		font: inherit;
 		font-size: 0.95rem;
 		padding: 0.45rem 0.9rem;
-		border-radius: 999px;
-		border: 1px solid var(--line);
+		border-radius: var(--pill);
+		border: var(--bw) solid var(--line);
 		background: var(--card);
 		color: var(--ink);
 		cursor: pointer;
@@ -261,8 +261,8 @@
 	}
 	.panel {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 14px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius);
 		padding: 1.1rem 1.25rem;
 		min-height: 13.5rem;
 		box-sizing: border-box;
@@ -271,7 +271,7 @@
 		transition: box-shadow 0.3s ease;
 	}
 	.stage[data-phase='reading'] .sentence {
-		box-shadow: 0 0 0 2px #f0a58f;
+		box-shadow: 0 0 0 2px var(--accent-mid);
 	}
 	.label {
 		font-size: 0.75rem;
@@ -292,7 +292,7 @@
 	.added.newest {
 		display: inline-block;
 		animation: drop-in 0.4s ease-out both;
-		background: #fbe6de;
+		background: var(--accent-soft);
 		border-radius: 4px;
 		padding: 0 0.15em;
 		margin: 0 -0.15em;
@@ -304,7 +304,7 @@
 		}
 	}
 	.blank {
-		color: #c4bcb0;
+		color: var(--muted);
 		animation: blink 1.2s ease-in-out infinite;
 	}
 	@keyframes blink {
@@ -325,11 +325,11 @@
 		color: white;
 		border: 0;
 		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		cursor: pointer;
 	}
 	.run:hover:not(:disabled) {
-		background: #a8442c;
+		background: var(--accent-hover);
 	}
 	.run:disabled {
 		opacity: 0.4;
@@ -390,19 +390,19 @@
 	}
 	.bar {
 		height: 0.6rem;
-		border-radius: 999px;
-		background: #f1ebe2;
+		border-radius: var(--pill);
+		background: var(--track);
 		overflow: hidden;
 	}
 	.bar span {
 		display: block;
 		height: 100%;
 		border-radius: inherit;
-		background: #d9cfc1;
+		background: var(--track-strong);
 		transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 	}
 	li:first-child .bar span {
-		background: #e3a593;
+		background: var(--accent-mid);
 	}
 	.pct {
 		font-size: 0.85rem;
@@ -411,7 +411,7 @@
 		font-variant-numeric: tabular-nums;
 	}
 	li.picked {
-		background: #fbe6de;
+		background: var(--accent-soft);
 	}
 	li.picked .token {
 		color: var(--accent);
@@ -427,7 +427,7 @@
 	}
 	.empty {
 		margin: auto 0;
-		color: #b5ada1;
+		color: var(--muted);
 		font-style: italic;
 	}
 

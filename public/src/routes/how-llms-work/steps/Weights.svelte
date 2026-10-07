@@ -185,7 +185,7 @@
 	.facts strong {
 		color: var(--ink);
 		font-weight: normal;
-		border-bottom: 2px solid #f0a58f;
+		border-bottom: 2px solid var(--accent-mid);
 	}
 
 	/* words → numbers → network → ranked words */
@@ -214,8 +214,8 @@
 		display: grid;
 		place-items: center;
 		height: 2.1rem;
-		border-radius: 8px;
-		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		border: var(--bw) solid var(--line);
 		background: var(--card);
 		font-size: 1.05rem;
 		transition:
@@ -228,14 +228,14 @@
 	.chip.num {
 		border-style: dashed;
 		background: transparent;
-		font-family: ui-monospace, monospace;
+		font-family: var(--font-mono);
 		font-size: 0.95rem;
 		color: var(--accent);
 	}
 	.chip.num.filled {
 		border-style: solid;
-		border-color: #f0c2b2;
-		background: #fbe6de;
+		border-color: var(--accent-mid);
+		background: var(--accent-soft);
 	}
 	.chip.num.filled span {
 		animation: pop 0.35s ease-out both;
@@ -247,7 +247,7 @@
 		}
 	}
 	.dots {
-		color: #c4bcb0;
+		color: var(--muted);
 	}
 	.link {
 		display: flex;
@@ -258,8 +258,8 @@
 	/* Ranked output */
 	.outputs {
 		background: var(--card);
-		border: 1px solid var(--line);
-		border-radius: 14px;
+		border: var(--bw) solid var(--line);
+		border-radius: var(--radius);
 		padding: 1rem 1.1rem;
 		min-height: 13rem;
 		box-sizing: border-box;
@@ -291,8 +291,8 @@
 	}
 	.bar {
 		height: 0.55rem;
-		border-radius: 999px;
-		background: #f1ebe2;
+		border-radius: var(--pill);
+		background: var(--track);
 		overflow: hidden;
 	}
 	.bar span {
@@ -300,7 +300,7 @@
 		height: 100%;
 		width: var(--p);
 		border-radius: inherit;
-		background: #e3a593;
+		background: var(--accent-mid);
 		animation: grow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 		animation-delay: calc(var(--i) * 110ms + 150ms);
 	}
@@ -320,7 +320,7 @@
 	}
 	.empty {
 		margin: 2rem 0 0;
-		color: #b5ada1;
+		color: var(--muted);
 		font-style: italic;
 	}
 
@@ -337,12 +337,12 @@
 		color: white;
 		border: 0;
 		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
+		border-radius: var(--pill);
 		cursor: pointer;
 		white-space: nowrap;
 	}
 	.run:hover:not(:disabled) {
-		background: #a8442c;
+		background: var(--accent-hover);
 	}
 	.run:disabled {
 		opacity: 0.4;
@@ -361,12 +361,11 @@
 		gap: 1.5rem;
 		margin-top: 2.25rem;
 		padding-top: 1.25rem;
-		border-top: 1px dashed var(--line);
+		border-top: var(--bw) dashed var(--line);
 	}
 	.facts h3 {
 		margin: 0 0 0.35rem;
-		font-size: 1.05rem;
-		font-weight: normal;
+		font-size: 1rem;
 	}
 	.facts p {
 		margin: 0;
