@@ -26,13 +26,23 @@
 		</a>
 
 		<a class="card feature" href={resolve('/ambiguous-questions')}>
-			<span class="tag">New · Interactive · Part two</span>
+			<span class="tag">Interactive · Part two</span>
 			<h3>What does an LLM do when there's no right answer?</h3>
 			<p>
 				Ask it about politics and it never hesitates. So where does its answer come from? A look at
 				how training decides what it says when people disagree.
 			</p>
 			<span class="go">Find out →</span>
+		</a>
+
+		<a class="card feature" href={resolve('/speakers')}>
+			<span class="tag">New · Interactive</span>
+			<h3>How does a speaker make sound?</h3>
+			<p>
+				It all starts with a wind-up gramophone. Real recordings from 1888, a gramophone cut in half,
+				and what sound actually is.
+			</p>
+			<span class="go">Start listening →</span>
 		</a>
 
 		<article class="card">
