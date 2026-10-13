@@ -1,0 +1,1 @@
+import{C as e,S as t,_ as n,z as r}from"../chunks/CKRfBsFU.js";import{t as i}from"../chunks/DkNR7jun.js";function a(a,o){i(a,{title:`From gramophone to Bluetooth`,children:(i,a)=>{var s=e(),c=r(s);n(c,()=>o.children),t(i,s)},$$slots:{default:!0}})}export{a as component};

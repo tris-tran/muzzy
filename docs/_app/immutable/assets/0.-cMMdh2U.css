@@ -1,0 +1,1 @@
+:root{--paper:#fff;--card:#fff;--ink:#0f172a;--ink-soft:#64748b;--muted:#94a3b8;--line:#e5e7eb;--accent:#6366f1;--on-accent:#fff}body{background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;margin:0;font-family:Plus Jakarta Sans,system-ui,sans-serif}

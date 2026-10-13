@@ -1,8 +1,9 @@
 <script>
 	// The shell every presentation shares: fixed header, its own snapping scroll container,
-	// and the design tokens + step typography that the components in this folder read.
+	// and the step typography; the design tokens come from tokens.css.
 	//   title – shown in the header and the browser tab
 	import { resolve } from '$app/paths';
+	import './tokens.css';
 
 	let { title, children } = $props();
 </script>
@@ -18,7 +19,7 @@
 </svelte:head>
 
 <!-- Each presentation is its own scroll container so snapping between steps doesn't leak into the rest of the site -->
-<div class="app">
+<div class="app explainer-tokens">
 	<header>
 		<a class="back" href={resolve('/')}>← Muzzy</a>
 		<span class="title">{title}</span>
@@ -28,52 +29,8 @@
 </div>
 
 <style>
-	/*
-	 * Design system: editorial minimalism with purposeful motion (think Stripe explainers:
-	 * every step is a slide). Every component reads these tokens.
-	 */
+	/* The tokens (colours, fonts, radii) live in tokens.css; this is the page around them */
 	.app {
-		--paper: #f5f7fa;
-		--card: #ffffff;
-		--line: #e8ecf0;
-		--ink: #0f172a;
-		--ink-soft: #475569;
-		--muted: #94a3b8;
-		--track: #eef1f5;
-		--track-strong: #cbd5e1;
-
-		--accent: #6366f1;
-		--accent-hover: #4f46e5;
-		--accent-mid: #818cf8;
-		--accent-soft: #eef2ff;
-
-		--dark: #0f172a;
-		--on-dark: #f8fafc;
-		--tag: #c4b5fd;
-		--tag-ink: #7c3aed;
-		--good: #059669;
-		--good-soft: #d1fae5;
-		--good-light: #6ee7b7;
-		--bad: #e11d48;
-		--bad-soft: #ffe4e6;
-		--bad-light: #fda4af;
-		--cool: #f0abfc;
-
-		--font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-		--font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-		--font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
-		--font-mono: 'Fira Code', ui-monospace, monospace;
-		--display-scale: 1;
-		--display-weight: 700;
-
-		--radius-sm: 8px;
-		--radius: 12px;
-		--radius-lg: 16px;
-		--pill: 999px;
-		--bw: 1px;
-		--shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-		--shadow-lift: 0 24px 48px -20px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15, 23, 42, 0.06);
-
 		height: 100svh;
 		overflow-y: auto;
 		scroll-snap-type: y mandatory;

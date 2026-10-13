@@ -1,181 +1,246 @@
 <script>
+	// The landing page: a light, minimal gallery. Each explainer gets a big card with a live visual taken
+	// straight from it, shown in a light "window" that uses the explainers' own look.
+	import { onMount } from 'svelte';
 	import { asset, resolve } from '$app/paths';
+	import '#lib/presentation/tokens.css';
+	import LlmCube from '#lib/presentation/LlmCube.svelte';
+	import Bars from '../ambiguous-questions/components/Bars.svelte';
+	import GramophoneCutaway from '../speakers/components/GramophoneCutaway.svelte';
+
+	const explainers = [
+		{
+			id: 'llm',
+			href: '/how-llms-work',
+			number: '01',
+			title: 'How does an LLM actually work?',
+			text: 'What happens between typing a question and getting an answer. No maths, just poke at it.'
+		},
+		{
+			id: 'ambiguous',
+			href: '/ambiguous-questions',
+			number: '02',
+			title: "What does an LLM do when there's no right answer?",
+			text: 'It never hesitates. So where does its answer come from?'
+		},
+		{
+			id: 'speakers',
+			href: '/speakers',
+			number: '03',
+			title: 'How does a speaker make sound?',
+			text: 'From a wind-up gramophone to the Bluetooth speaker on your desk.'
+		}
+	];
+
+	// The bars grow in once the page is up
+	const topping = [['pepperoni', 26], ['mushrooms', 18], ['cheese', 16], ['pineapple', 12]];
+	let grow = $state(false);
+	onMount(() => requestAnimationFrame(() => (grow = true)));
 </script>
 
 <header class="hero">
-	<p class="eyebrow">A little corner of the internet</p>
-	<h1>Things I'm making, <em>and sharing with you.</em></h1>
-	<p class="lede">
-		Small experiments and explainers, mostly about language models. Some of it is public, and some
-		of it is behind the <a href={resolve('/private')}>private</a> door.
-	</p>
+	<p class="brand">Muzzy</p>
+	<h1>It's complicated. <em>Kind of.</em></h1>
+	<p class="lede">The simple version of how some complicated things work. Pick one and poke at it.</p>
 </header>
 
-<section>
-	<h2>Things to look at</h2>
-
-	<div class="grid">
-		<a class="card feature" href={resolve('/how-llms-work')}>
-			<span class="tag">Interactive · Part one</span>
-			<h3>How does an LLM actually work?</h3>
-			<p>
-				A hands-on walk through what happens between typing a question and getting an answer. No
-				maths, no jargon — just poke at it.
-			</p>
-			<span class="go">Start exploring →</span>
+<section class="gallery" aria-label="Explainers">
+	{#each explainers as e (e.id)}
+		<a class="card" href={resolve(e.href)}>
+			<div class="window explainer-tokens" aria-hidden="true">
+				{#if e.id === 'llm'}
+					<div class="center"><LlmCube mode="working" size="11rem" /></div>
+				{:else if e.id === 'ambiguous'}
+					<div class="bars">
+						<p class="prompt">The best pizza topping is <span>___</span></p>
+						<Bars options={topping} {grow} />
+					</div>
+				{:else}
+					<GramophoneCutaway labels={false} height="100%" />
+				{/if}
+			</div>
+			<div class="text">
+				<span class="number">{e.number}</span>
+				<h2>{e.title}</h2>
+				<p>{e.text}</p>
+				<span class="go">Open →</span>
+			</div>
 		</a>
-
-		<a class="card feature" href={resolve('/ambiguous-questions')}>
-			<span class="tag">Interactive · Part two</span>
-			<h3>What does an LLM do when there's no right answer?</h3>
-			<p>
-				Ask it about politics and it never hesitates. So where does its answer come from? A look at
-				how training decides what it says when people disagree.
-			</p>
-			<span class="go">Find out →</span>
-		</a>
-
-		<a class="card feature" href={resolve('/speakers')}>
-			<span class="tag">New · Interactive</span>
-			<h3>How does a speaker make sound?</h3>
-			<p>
-				It all starts with a wind-up gramophone. Real recordings from 1888, a gramophone cut in half,
-				and what sound actually is.
-			</p>
-			<span class="go">Start listening →</span>
-		</a>
-
-		<article class="card">
-			<span class="tag">Demo</span>
-			<h3><a href={asset('poc-1/names.html')}>Finding names &amp; addresses with a tiny LLM</a></h3>
-			<p>
-				A small language model reads a document piece by piece, with lots of requests running in
-				parallel, and picks out every name and address it finds. Press <em>Start demo</em> and watch
-				it work.
-			</p>
-			<p class="links">
-				<a class="button" href={asset('poc-1/names.html')}>Open the demo</a>
-				<a href={asset('poc-1/names-mobile.html')}>Phone version</a>
-			</p>
-		</article>
-	</div>
+	{/each}
 </section>
 
-<section class="door">
-	<div>
-		<h2>Behind the door</h2>
-		<p>The private side needs a password. If you have it, come on in.</p>
+<section class="also" aria-label="Also here">
+	<div class="small">
+		<span class="number">Demo</span>
+		<h3><a href={asset('poc-1/names.html')}>Finding names &amp; addresses with a tiny LLM</a></h3>
+		<p>
+			A small language model reads a document piece by piece, with lots of requests running in
+			parallel, and picks out every name and address. Press <em>Start demo</em> and watch.
+		</p>
+		<p class="links">
+			<a class="button" href={asset('poc-1/names.html')}>Open the demo</a>
+			<a href={asset('poc-1/names-mobile.html')}>Phone version</a>
+		</p>
 	</div>
-	<a class="button ghost" href={resolve('/private')}>Go to private →</a>
+	<div class="small door">
+		<span class="number">Private</span>
+		<h3>Behind the door</h3>
+		<p>The private side needs a password. If you have it, come on in.</p>
+		<p class="links"><a class="button ghost" href={resolve('/private')}>Go to private →</a></p>
+	</div>
 </section>
 
 <style>
 	.hero {
-		padding: 1rem 0 2rem;
+		max-width: 44rem;
 	}
-	.eyebrow {
-		margin: 0 0 0.75rem;
+	.brand {
+		margin: 0 0 2.5rem;
 		font-size: 0.8rem;
-		letter-spacing: 0.12em;
+		font-weight: 700;
+		letter-spacing: 0.2em;
 		text-transform: uppercase;
-		color: var(--accent);
+		color: var(--ink-soft);
 	}
 	h1 {
 		margin: 0;
-		font-size: 2.6rem;
-		line-height: 1.12;
-		font-weight: normal;
+		font-size: 3rem;
+		line-height: 1.08;
+		letter-spacing: -0.03em;
 		text-wrap: balance;
 	}
 	h1 em {
-		color: var(--ink-soft);
+		font-style: normal;
+		color: var(--accent);
 	}
 	.lede {
-		max-width: 34rem;
-		margin: 1.25rem 0 0;
-		font-size: 1.15rem;
-		line-height: 1.6;
+		margin: 1.2rem 0 0;
+		font-size: 1.2rem;
+		line-height: 1.55;
 		color: var(--ink-soft);
-	}
-	.lede a {
-		color: inherit;
 	}
 
-	section {
-		margin-top: 2.5rem;
-	}
-	h2 {
-		margin: 0 0 1rem;
-		font-size: 0.85rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--ink-soft);
-		font-weight: normal;
-	}
-	.grid {
+	/* The gallery: three big cards, each with a light window showing a piece of its explainer */
+	.gallery {
 		display: grid;
-		gap: 1rem;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1.25rem;
+		margin-top: 3rem;
 	}
-
 	.card {
-		display: block;
+		display: flex;
+		flex-direction: column;
+		border-radius: 20px;
 		background: var(--card);
 		border: 1px solid var(--line);
+		color: inherit;
+		text-decoration: none;
+		overflow: hidden;
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
+	}
+	.card:hover {
+		transform: translateY(-4px);
+		border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+		box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.25);
+	}
+	.window {
+		position: relative;
+		margin: 0.6rem 0.6rem 0;
+		aspect-ratio: 4 / 3;
 		border-radius: 14px;
-		padding: 1.4rem 1.6rem;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-		color: inherit;
-		text-decoration: none;
+		background: var(--paper);
+		overflow: hidden;
+		pointer-events: none;
 	}
-	.card h3 {
-		margin: 0.5rem 0 0.5rem;
-		font-size: 1.25rem;
+	.center {
+		height: 100%;
+		display: grid;
+		place-items: center;
 	}
-	.card h3 a {
-		color: inherit;
-		text-decoration: none;
+	.bars {
+		height: 100%;
+		box-sizing: border-box;
+		padding: 1.4rem 1.4rem 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 1rem;
+		color: var(--ink);
 	}
-	.card h3 a:hover {
-		text-decoration: underline;
+	.prompt {
+		margin: 0;
+		font-size: 1.15rem;
 	}
-	.card p {
-		margin: 0.5rem 0;
-		line-height: 1.55;
+	.prompt span {
+		color: var(--muted);
 	}
-	.tag {
+	.window :global(.still) {
+		border-radius: 0;
+	}
+	.text {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		padding: 1.2rem 1.4rem 1.4rem;
+	}
+	.number {
 		font-size: 0.75rem;
-		letter-spacing: 0.08em;
+		font-weight: 700;
+		letter-spacing: 0.15em;
 		text-transform: uppercase;
+		color: var(--accent);
+	}
+	h2 {
+		margin: 0.5rem 0 0.5rem;
+		font-size: 1.3rem;
+		line-height: 1.25;
+		letter-spacing: -0.015em;
+	}
+	.text p {
+		margin: 0;
+		line-height: 1.55;
 		color: var(--ink-soft);
 	}
-
-	.feature {
-		background: var(--ink);
-		color: var(--paper);
-		border-color: var(--ink);
-		transition: transform 0.15s ease, box-shadow 0.15s ease;
-	}
-	.feature:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-	}
-	.feature .tag {
-		color: #f0a58f;
-	}
-	.feature h3 {
-		font-size: 1.6rem;
-		font-weight: normal;
-	}
-	.feature p {
-		color: #d9d3c9;
-		max-width: 32rem;
-	}
 	.go {
-		display: inline-block;
-		margin-top: 0.75rem;
-		font-weight: bold;
+		margin-top: auto;
+		padding-top: 1rem;
+		font-weight: 700;
 	}
 
+	/* Smaller things below the gallery */
+	.also {
+		display: grid;
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		gap: 1.25rem;
+		margin-top: 1.25rem;
+	}
+	.small {
+		padding: 1.3rem 1.5rem;
+		border-radius: 20px;
+		border: 1px solid var(--line);
+	}
+	.door {
+		border-style: dashed;
+	}
+	h3 {
+		margin: 0.5rem 0;
+		font-size: 1.15rem;
+	}
+	h3 a {
+		color: inherit;
+		text-decoration: none;
+	}
+	h3 a:hover {
+		text-decoration: underline;
+	}
+	.small p {
+		margin: 0.4rem 0 0;
+		line-height: 1.55;
+		color: var(--ink-soft);
+	}
 	.links {
 		display: flex;
 		align-items: center;
@@ -183,54 +248,51 @@
 		flex-wrap: wrap;
 		margin-top: 1rem !important;
 	}
-	.button {
-		display: inline-block;
-		background: var(--ink);
-		color: var(--paper);
-		padding: 0.5rem 1rem;
-		border-radius: 999px;
-		text-decoration: none;
-		white-space: nowrap;
-	}
-	.button:hover {
-		background: #000;
-	}
 	.links a:not(.button) {
 		color: var(--ink-soft);
 	}
-
-	.door {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		flex-wrap: wrap;
-		padding-top: 2rem;
-		border-top: 1px dashed var(--line);
-	}
-	.door h2 {
-		margin-bottom: 0.4rem;
-	}
-	.door p {
-		margin: 0;
-		color: var(--ink-soft);
+	.button {
+		display: inline-block;
+		padding: 0.5rem 1.1rem;
+		border-radius: 999px;
+		background: var(--accent);
+		color: var(--on-accent);
+		font-weight: 700;
+		text-decoration: none;
+		white-space: nowrap;
 	}
 	.button.ghost {
-		background: transparent;
+		background: none;
 		color: var(--ink);
-		border: 1px solid var(--ink);
+		border: 1px solid var(--ink-soft);
 	}
 	.button.ghost:hover {
 		background: var(--ink);
-		color: var(--paper);
+		color: var(--on-accent);
 	}
 
-	@media (max-width: 600px) {
-		h1 {
-			font-size: 2rem !important;
+	@media (max-width: 960px) {
+		.gallery {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
+		.also {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	@media (max-width: 640px) {
+		h1 {
+			font-size: 2.1rem;
+		}
+		.gallery {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
 		.card {
-			padding: 1.2rem 1.2rem;
+			transition: none;
+		}
+		.card:hover {
+			transform: none;
 		}
 	}
 </style>

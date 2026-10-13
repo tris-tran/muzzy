@@ -1,0 +1,45 @@
+/* The explainers' design tokens: editorial minimalism with purposeful motion. Every component in
+   #lib/presentation and in each explainer reads these. Put `explainer-tokens` on any element to
+   give its children this look (the presentations do it on their whole page). */
+.explainer-tokens {
+	--paper: #f5f7fa;
+	--card: #ffffff;
+	--line: #e8ecf0;
+	--ink: #0f172a;
+	--ink-soft: #475569;
+	--muted: #94a3b8;
+	--track: #eef1f5;
+	--track-strong: #cbd5e1;
+
+	--accent: #6366f1;
+	--accent-hover: #4f46e5;
+	--accent-mid: #818cf8;
+	--accent-soft: #eef2ff;
+
+	--dark: #0f172a;
+	--on-dark: #f8fafc;
+	--tag: #c4b5fd;
+	--tag-ink: #7c3aed;
+	--good: #059669;
+	--good-soft: #d1fae5;
+	--good-light: #6ee7b7;
+	--bad: #e11d48;
+	--bad-soft: #ffe4e6;
+	--bad-light: #fda4af;
+	--cool: #f0abfc;
+
+	--font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+	--font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+	--font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+	--font-mono: 'Fira Code', ui-monospace, monospace;
+	--display-scale: 1;
+	--display-weight: 700;
+
+	--radius-sm: 8px;
+	--radius: 12px;
+	--radius-lg: 16px;
+	--pill: 999px;
+	--bw: 1px;
+	--shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+	--shadow-lift: 0 24px 48px -20px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15, 23, 42, 0.06);
+}
