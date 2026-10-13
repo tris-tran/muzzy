@@ -1,0 +1,1 @@
+import{C as e,S as t,_ as n,z as r}from"../chunks/CKRfBsFU.js";import{t as i}from"../chunks/Bk8uWYzI.js";function a(a,o){i(a,{title:`How LLMs work`,children:(i,a)=>{var s=e(),c=r(s);n(c,()=>o.children),t(i,s)},$$slots:{default:!0}})}export{a as component};

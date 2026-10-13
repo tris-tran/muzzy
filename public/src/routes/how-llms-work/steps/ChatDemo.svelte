@@ -2,10 +2,10 @@
 	// Step 7: a chat, and what really happens behind it. Every turn, the WHOLE conversation is
 	// formatted with ChatML tags, turned into numbers and sent to the LLM, which writes the
 	// assistant's reply one piece at a time until it outputs <|im_end|>.
-	import LlmBox from '../components/LlmBox.svelte';
-	import Pipe from '../components/Pipe.svelte';
-	import ContextView from '../components/ContextView.svelte';
-	import { context, words, tag, END } from '../components/chatml.js';
+	import LlmBox from '#lib/presentation/LlmBox.svelte';
+	import Pipe from '#lib/presentation/Pipe.svelte';
+	import ContextView from '#lib/presentation/ContextView.svelte';
+	import { context, words, tag, END } from '#lib/presentation/chatml.js';
 
 	const topics = {
 		picnic: {

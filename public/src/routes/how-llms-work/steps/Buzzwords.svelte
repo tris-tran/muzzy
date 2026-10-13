@@ -1,6 +1,7 @@
 <script>
 	// Last step: no explanations, just a promise. Popular AI words to spark curiosity;
 	// tap the ones you'd like explained and they collect into a little "ask me" list.
+	import { resolve } from '$app/paths';
 
 	// Size 3 = big, 2 = medium, 1 = small
 	const buzzwords = [
@@ -72,6 +73,10 @@
 
 	<div class="end">
 		<p>Thanks for reading! ✦</p>
+		<a class="part-two" href={resolve('/ambiguous-questions')}>
+			<span>Part two</span>
+			What does an LLM do when there's no right answer? →
+		</a>
 		<button onclick={toTop}>↑ Back to the start</button>
 	</div>
 </div>
@@ -191,6 +196,26 @@
 	.end p {
 		margin: 0;
 		font-size: 1.1rem;
+	}
+	.part-two {
+		display: grid;
+		gap: 0.15rem;
+		padding: 0.7rem 1.3rem;
+		border-radius: var(--radius);
+		background: var(--accent);
+		color: white;
+		text-align: center;
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+	.part-two:hover {
+		background: var(--accent-hover);
+	}
+	.part-two span {
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		opacity: 0.8;
 	}
 	.end button {
 		font: inherit;

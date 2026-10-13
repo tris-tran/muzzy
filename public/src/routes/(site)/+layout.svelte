@@ -7,6 +7,7 @@
 	<a class="brand" href={resolve('/')}>Muzzy</a>
 	<span class="spacer"></span>
 	<a href={resolve('/how-llms-work')}>How LLMs work</a>
+	<a href={resolve('/ambiguous-questions')}>Ambiguous questions</a>
 	<a href={resolve('/private')}>Private</a>
 </nav>
 

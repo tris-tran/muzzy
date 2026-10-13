@@ -1,7 +1,7 @@
 <script>
 	// Step 3: the LLM only ever guesses the next word (token). Each "Run inference" adds one.
-	import LlmBox from '../components/LlmBox.svelte';
-	import Pipe from '../components/Pipe.svelte';
+	import LlmBox from '#lib/presentation/LlmBox.svelte';
+	import Pipe from '#lib/presentation/Pipe.svelte';
 
 	// Each phrase has a chain of runs: the top guesses (with made-up but plausible chances, in %)
 	// for the next token, given everything so far. The first guess is the one that gets picked.

@@ -1,7 +1,7 @@
 <script>
 	// Step 6: why so many weights, and how big real models are.
 	import { onMount } from 'svelte';
-	import { WEIGHT_COUNT } from '../components/NetworkBox.svelte';
+	import { WEIGHT_COUNT } from '#lib/presentation/NetworkBox.svelte';
 
 	// Counting one weight per second; storing each weight in 2 bytes (the usual 16-bit format).
 	const models = [

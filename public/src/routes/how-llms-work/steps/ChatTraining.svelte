@@ -2,8 +2,8 @@
 	// Step 8: chat models are trained with the same guessing game, but on whole conversations.
 	// The assistant's turn is hidden and the model has to guess it, piece by piece, including
 	// the <|im_end|> that says "I'm done". Then a recap of the whole explainer.
-	import ContextView from '../components/ContextView.svelte';
-	import { message, opening, words, tag, END } from '../components/chatml.js';
+	import ContextView from '#lib/presentation/ContextView.svelte';
+	import { message, opening, words, tag, END } from '#lib/presentation/chatml.js';
 
 	// `guesses` lines up with the reply's pieces (plus <|im_end|> at the end)
 	const examples = [

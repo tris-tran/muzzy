@@ -16,13 +16,23 @@
 
 	<div class="grid">
 		<a class="card feature" href={resolve('/how-llms-work')}>
-			<span class="tag">New · Interactive</span>
+			<span class="tag">Interactive · Part one</span>
 			<h3>How does an LLM actually work?</h3>
 			<p>
 				A hands-on walk through what happens between typing a question and getting an answer. No
 				maths, no jargon — just poke at it.
 			</p>
 			<span class="go">Start exploring →</span>
+		</a>
+
+		<a class="card feature" href={resolve('/ambiguous-questions')}>
+			<span class="tag">New · Interactive · Part two</span>
+			<h3>What does an LLM do when there's no right answer?</h3>
+			<p>
+				Ask it about politics and it never hesitates. So where does its answer come from? A look at
+				how training decides what it says when people disagree.
+			</p>
+			<span class="go">Find out →</span>
 		</a>
 
 		<article class="card">

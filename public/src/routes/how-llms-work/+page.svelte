@@ -1,8 +1,8 @@
 <script>
 	// The explainer, one full-screen step at a time. Each step lives in steps/;
-	// shared pieces (Step, LlmBox, NetworkBox, Pipe) live in components/.
+	// shared pieces (Step, LlmBox, NetworkBox, Pipe) live in #lib/presentation.
 	// To add, remove or reorder a step, edit this list: the "keep going" links follow it.
-	import Step from './components/Step.svelte';
+	import Step from '#lib/presentation/Step.svelte';
 	import Intro from './steps/Intro.svelte';
 	import BlackBox from './steps/BlackBox.svelte';
 	import SearchExample from './steps/SearchExample.svelte';

@@ -1,8 +1,8 @@
 <script>
 	// Step 5: open the box. Words become numbers, the numbers flow through the weights,
 	// and out comes a score for each possible next word.
-	import NetworkBox, { WEIGHT_COUNT, GAPS } from '../components/NetworkBox.svelte';
-	import Pipe from '../components/Pipe.svelte';
+	import NetworkBox, { WEIGHT_COUNT, GAPS } from '#lib/presentation/NetworkBox.svelte';
+	import Pipe from '#lib/presentation/Pipe.svelte';
 
 	// Real GPT-2 token numbers for these words
 	const tokens = [

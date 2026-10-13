@@ -1,6 +1,6 @@
 <script>
-	import LlmBox from '../components/LlmBox.svelte';
-	import Pipe from '../components/Pipe.svelte';
+	import LlmBox from '#lib/presentation/LlmBox.svelte';
+	import Pipe from '#lib/presentation/Pipe.svelte';
 
 	// The LLM seen from the outside: words go in, something happens, words come out.
 	const examples = [

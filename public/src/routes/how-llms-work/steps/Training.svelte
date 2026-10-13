@@ -2,8 +2,8 @@
 	// Step 4: training. Take real text, hide the next word, let the LLM guess, then check.
 	// Wrong → "punished" (its dials get turned a lot). Right → "rewarded" (dials barely move).
 	// The more rounds it has played, the better its guesses get.
-	import LlmBox from '../components/LlmBox.svelte';
-	import Pipe from '../components/Pipe.svelte';
+	import LlmBox from '#lib/presentation/LlmBox.svelte';
+	import Pipe from '#lib/presentation/Pipe.svelte';
 
 	// Snippets of "real text". `near` is a plausible-but-wrong guess a half-trained model might make.
 	const lessons = [
