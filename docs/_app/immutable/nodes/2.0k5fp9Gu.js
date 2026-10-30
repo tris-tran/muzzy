@@ -1,1 +1,0 @@
-import{Q as e,R as t,S as n,_ as r,w as i}from"../chunks/CKRfBsFU.js";var a=i(`<main class="svelte-1br2sqw"><!></main>`);function o(i,o){var s=a(),c=t(s);r(c,()=>o.children),e(s),n(i,s)}export{o as component};

@@ -1,0 +1,1 @@
+import{B as e,C as t,S as n,_ as r}from"../chunks/SEy7lsyZ.js";import{t as i}from"../chunks/DX_GR9zw.js";function a(a,o){i(a,{title:`How we test language models`,children:(i,a)=>{var s=t(),c=e(s);r(c,()=>o.children),n(i,s)},$$slots:{default:!0}})}export{a as component};

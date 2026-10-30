@@ -7,6 +7,8 @@
 	import LlmCube from '#lib/presentation/LlmCube.svelte';
 	import Bars from '../ambiguous-questions/components/Bars.svelte';
 	import GramophoneCutaway from '../speakers/components/GramophoneCutaway.svelte';
+	import Factory from '../benchmarks/components/Factory.svelte';
+	import { requests } from '../benchmarks/components/requests.js';
 
 	const explainers = [
 		{
@@ -29,7 +31,21 @@
 			number: '03',
 			title: 'How does a speaker make sound?',
 			text: 'From a wind-up gramophone to the Bluetooth speaker on your desk.'
+		},
+		{
+			id: 'benchmarks',
+			href: '/benchmarks',
+			number: '04',
+			title: 'How do we test language models?',
+			text: 'Which model is good enough for our work? A factory of questions, answers and checks, and how I built it.',
+			note: 'Best on a computer'
 		}
+	];
+
+	// The factory, as in the benchmarks explainer: our server answers, a machine checks
+	const stations = [
+		{ at: 0.2, kind: 'box', name: 'Our server', sub: 'Gemma · Qwen', apply: (row) => ({ ours: row.ours }) },
+		{ at: 0.7, kind: 'machine', name: 'Validate', sub: 'same as Gemini?', apply: (row) => ({ verdict: row.ours === row.answer }) }
 	];
 
 	// The bars grow in once the page is up
@@ -55,15 +71,17 @@
 						<p class="prompt">The best pizza topping is <span>___</span></p>
 						<Bars options={topping} {grow} />
 					</div>
-				{:else}
+				{:else if e.id === 'speakers'}
 					<GramophoneCutaway labels={false} height="100%" />
+				{:else}
+					<div class="belt"><Factory rows={requests} {stations} end="crate" compact /></div>
 				{/if}
 			</div>
 			<div class="text">
 				<span class="number">{e.number}</span>
 				<h2>{e.title}</h2>
 				<p>{e.text}</p>
-				<span class="go">Open →</span>
+				<span class="go">Open →{#if e.note}<span class="note">{e.note}</span>{/if}</span>
 			</div>
 		</a>
 	{/each}
@@ -120,10 +138,10 @@
 		color: var(--ink-soft);
 	}
 
-	/* The gallery: three big cards, each with a light window showing a piece of its explainer */
+	/* The gallery: big cards, two by two, each with a light window showing a piece of its explainer */
 	.gallery {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1.25rem;
 		margin-top: 3rem;
 	}
@@ -149,7 +167,7 @@
 	.window {
 		position: relative;
 		margin: 0.6rem 0.6rem 0;
-		aspect-ratio: 4 / 3;
+		aspect-ratio: 16 / 9;
 		border-radius: 14px;
 		background: var(--paper);
 		overflow: hidden;
@@ -176,6 +194,12 @@
 	}
 	.prompt span {
 		color: var(--muted);
+	}
+	.belt {
+		height: 100%;
+		display: grid;
+		align-items: center;
+		padding: 0 0.5rem;
 	}
 	.window :global(.still) {
 		border-radius: 0;
@@ -208,6 +232,12 @@
 		margin-top: auto;
 		padding-top: 1rem;
 		font-weight: 700;
+	}
+	.note {
+		margin-left: 0.8rem;
+		font-size: 0.8rem;
+		font-weight: normal;
+		color: var(--muted);
 	}
 
 	/* Smaller things below the gallery */
@@ -272,9 +302,6 @@
 	}
 
 	@media (max-width: 960px) {
-		.gallery {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
 		.also {
 			grid-template-columns: minmax(0, 1fr);
 		}
