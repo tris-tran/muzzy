@@ -1,0 +1,1 @@
+import{K as e,j as t,k as n,st as r,w as i}from"../chunks/ipVFole4.js";var a=t(`<main class="svelte-1br2sqw"><!></main>`);function o(t,o){var s=a(),c=e(s);i(c,()=>o.children),r(s),n(t,s)}export{o as component};

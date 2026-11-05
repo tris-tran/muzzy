@@ -1,0 +1,1 @@
+import{U as e,d as t,j as n,k as r,t as i}from"./ipVFole4.js";var a=n(`<div aria-hidden="true"><span class="svelte-1dk7kro"></span></div>`);function o(n,o){let s=i(o,`flowing`,3,!1),c=i(o,`vertical`,3,!1);var l=a();let u;e(()=>u=t(l,1,`pipe svelte-1dk7kro`,null,u,{flowing:s(),vertical:c()})),r(n,l)}export{o as t};

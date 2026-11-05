@@ -1,0 +1,1 @@
+import{A as e,k as t,q as n,w as r}from"../chunks/ipVFole4.js";import{t as i}from"../chunks/BvZZAdPz.js";function a(a,o){i(a,{title:`How we test language models`,children:(i,a)=>{var s=e(),c=n(s);r(c,()=>o.children),t(i,s)},$$slots:{default:!0}})}export{a as component};

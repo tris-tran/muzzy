@@ -9,6 +9,7 @@
 	import GramophoneCutaway from '../speakers/components/GramophoneCutaway.svelte';
 	import Factory from '../benchmarks/components/Factory.svelte';
 	import { requests } from '../benchmarks/components/requests.js';
+	import Machine from '../compression/components/Machine.svelte';
 
 	const explainers = [
 		{
@@ -39,6 +40,13 @@
 			title: 'How do we test language models?',
 			text: 'Which model is good enough for our work? A factory of questions, answers and checks, and how I built it.',
 			note: 'Best on a computer'
+		},
+		{
+			id: 'compression',
+			href: '/compression',
+			number: '05',
+			title: 'How do you make a file smaller?',
+			text: 'Squeezing text with gz and photos with JPEG. What gets kept, and what gets thrown away.'
 		}
 	];
 
@@ -73,6 +81,12 @@
 					</div>
 				{:else if e.id === 'speakers'}
 					<GramophoneCutaway labels={false} height="100%" />
+				{:else if e.id === 'compression'}
+					<div class="squeeze">
+						<span class="doc"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+						<Machine kind="compress" working />
+						<span class="doc packed"><i></i><i></i><i></i></span>
+					</div>
 				{:else}
 					<div class="belt"><Factory rows={requests} {stations} end="crate" compact /></div>
 				{/if}
@@ -200,6 +214,42 @@
 		display: grid;
 		align-items: center;
 		padding: 0 0.5rem;
+	}
+	.squeeze {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+	.doc {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		width: 4.5rem;
+		height: 6rem;
+		padding: 0 0.7rem;
+		box-sizing: border-box;
+		border-radius: 8px;
+		background: var(--card);
+		border: 1px solid var(--line);
+	}
+	.doc i {
+		height: 3px;
+		border-radius: 2px;
+		background: var(--track-strong);
+	}
+	.doc i:nth-child(odd) {
+		width: 75%;
+	}
+	.doc.packed {
+		width: 2.6rem;
+		height: 3.4rem;
+		padding: 0 0.5rem;
+		border-color: var(--accent-mid);
+	}
+	.doc.packed i {
+		background: var(--accent);
 	}
 	.window :global(.still) {
 		border-radius: 0;
