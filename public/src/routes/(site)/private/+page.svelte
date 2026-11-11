@@ -42,7 +42,12 @@
 			} catch {
 				throw new Error('Wrong password.');
 			}
-			html = new TextDecoder().decode(plain);
+			// Tell the private site where the public site's files are (its links to e.g. stamps/ would
+			// otherwise be read against this page's address)
+			const root = new URL('.', new URL(asset('vault.json'), location.href)).href;
+			html = new TextDecoder()
+				.decode(plain)
+				.replace('<head>', `<head><script>window.MUZZY_ROOT = ${JSON.stringify(root)};<\/script>`);
 		} catch (e) {
 			error = e.message;
 		} finally {

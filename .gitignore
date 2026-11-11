@@ -6,3 +6,6 @@ dist/
 
 # The private site's source is its own repo and must never be pushed here.
 /private/
+
+# Private letters and the scripts that build them; only the stamps (public/static/stamps/) live here.
+/slowly/
